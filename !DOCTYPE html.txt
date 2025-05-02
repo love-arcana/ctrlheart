@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Arcana - 3장 뽑기</title>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; background: #fdf8f9; padding: 20px; }
+    #controls { margin: 20px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #card-container { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+    .card { width: 100px; cursor: pointer; }
+    #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+             background: white; border: 2px solid #333; padding: 20px; z-index: 100;
+             display: none; max-width: 300px; text-align: left; }
+    #popup-close { float: right; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Love Arcana</h1>
+  <div id="controls">
+    <button id="shuffle">카드 섞기</button>
+    <button id="draw" disabled>3장 뽑기</button>
+  </div>
+  <div id="card-container"></div>
+
+  <div id="popup">
+    <span id="popup-close">X</span>
+    <div id="popup-content"></div>
+  </div>
+
+  <script>
+    // 카드 데이터 (예제용, 필요시 전체 78장 추가)
+    const cards = [
+      { id: "01", img: "images/01.png", meaning: { couple: { past: "..." }, solo: { past: "..." } } },
+      { id: "02", img: "images/02.png", meaning: { couple: { past: "..." }, solo: { past: "..." } } },
+      { id: "03", img: "images/03.png", meaning: { couple: { past: "..." }, solo: { past: "..." } } },
+      // ... 04 ~ 78
+    ];
+
+    let shuffled = [];
+    const container = document.getElementById('card-container');
+    const btnShuffle = document.getElementById('shuffle');
+    const btnDraw = document.getElementById('draw');
+    const popup = document.getElementById('popup');
+    const popupContent = document.getElementById('popup-content');
+    const popupClose = document.getElementById('popup-close');
+
+    // 섞기
+    btnShuffle.addEventListener('click', () => {
+      shuffled = cards.slice().sort(() => Math.random() - 0.5);
+      container.innerHTML = '';
+      btnDraw.disabled = false;
+    });
+
+    // 3장 뽑기
+    btnDraw.addEventListener('click', () => {
+      container.innerHTML = '';
+      const three = shuffled.slice(0, 3);
+      three.forEach(card => {
+        const img = document.createElement('img');
+        img.src = card.img;
+        img.className = 'card';
+        img.alt = card.id;
+        img.addEventListener('click', () => showMeaning(card));
+        container.appendChild(img);
+      });
+      btnDraw.disabled = true;
+    });
+
+    // 팝업 의미 표시
+    function showMeaning(card) {
+      // 예시: solo 모드로 past 의미 출력
+      const text = `<h2>${card.id}번 카드</h2><p>${card.meaning.solo.past}</p>`;
+      popupContent.innerHTML = text;
+      popup.style.display = 'block';
+    }
+
+    popupClose.addEventListener('click', () => {
+      popup.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
