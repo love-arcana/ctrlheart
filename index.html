@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="images/icon-192.png">
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Love Arcana</title>
+  <title>LOVE ARCANA</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="images/icon-192.png">
   <link rel="icon" href="images/icon-512.png">
@@ -92,10 +92,14 @@
   </style>
 </head>
 <body>
-  <h1>Love Arcana</h1>
+
+  <h1>LOVE ARCANA</h1>
   <br><br>
   <p class="guide">커플, 솔로를 선택한 후 질문을 생각하면서 카드 섞기를 누르세요</p>
-  <button id="shuffle" class="btn">카드 섞기</button>
+ <button id="shuffle" class="btn"
+        onclick="shuffleCards(); new Audio('audio/my-sound.mp3').play();">
+  카드 섞기
+</button>
 
   <br><br>
   <div id="card-container">
@@ -1416,5 +1420,7 @@ if ('serviceWorker' in navigator) {
     });
     popupClose.addEventListener('click',()=>popup.style.display='none');
   </script>
+
+
 </body>
 </html>
