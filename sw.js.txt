@@ -1,0 +1,49 @@
+// sw.js
+
+const CACHE_NAME = 'love-arcana-v1';
+const ASSETS_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/images/back.png',
+  '/images/icon-192.png',
+  '/images/icon-512.png',
+  // … 카드 이미지(01.png ~ 78.png) 등
+];
+
+// 서비스 워커 설치 시: 캐시 등록
+self.addEventListener('install', evt => {
+  evt.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(ASSETS_TO_CACHE))
+      .then(() => self.skipWaiting())
+  );
+});
+
+// 활성화 단계: 구 버전 캐시 삭제 (선택)
+self.addEventListener('activate', evt => {
+  evt.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.filter(key => key !== CACHE_NAME)
+            .map(oldKey => caches.delete(oldKey))
+      )
+    )
+  );
+});
+
+// 네트워크 요청 가로채기: 캐시 우선 응답 후 네트워크 요청
+self.addEventListener('fetch', evt => {
+  evt.respondWith(
+    caches.match(evt.request)
+      .then(cachedRes => {
+        if (cachedRes) return cachedRes;
+        return fetch(evt.request).then(networkRes => {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(evt.request, networkRes.clone());
+            return networkRes;
+          });
+        });
+      })
+  );
+});
